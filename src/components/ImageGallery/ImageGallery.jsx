@@ -1,43 +1,45 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+// import { useEffect } from 'react';
 import { ImageGalleryUl } from './ImageGallery.styled';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 
 
-export class ImageGallery extends Component {
-  state = {
-    data: [],
-    name: ''
-  };
+export const ImageGallery = ({data, modalItems, toggleModal}) => {
+  // state = {
+  //   data: [],
+  //   name: ''
+  // };
     
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.data !== this.props.data) {
-      this.setState({data: this.props.data})
-    }
-  };
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (prevProps.data !== this.props.data) {
+  //     this.setState({data: this.props.data})
+  //   }
+  // };
+
+  // useEffect(() => { });
   
-  galleryItemClick = (event) => {
+  const galleryItemClick = (event) => {
     if (event.target.nodeName !== 'IMG') {
       return;
     }
-    const dataFind = this.state.data.find(items => items.id === Number(event.target.id))
-    this.props.modalItems(dataFind);
-    this.props.toggleModal();
+    const dataFind = data.find(items => items.id === Number(event.target.id))
+    modalItems(dataFind);
+    toggleModal();
   };
     
-    render() {
+  
         return (
             <div>
-                {this.state.data !== null && <ImageGalleryUl onClick={this.galleryItemClick}>
-                    <ImageGalleryItem items={this.state.data} />
+                {data !== null && <ImageGalleryUl onClick={galleryItemClick}>
+                    <ImageGalleryItem items={data} />
                 </ImageGalleryUl>}
             </div>   
         )
-    }
+    
 };
 
 ImageGallery.propTypes = {
   onClick: PropTypes.func,
-}
+};
 
 

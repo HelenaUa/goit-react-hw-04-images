@@ -1,51 +1,65 @@
 // import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { useState } from 'react';
 import { HeaderSearchbar, SearchForm, SearchFormButton, SearchFormButtonLabel, SearchFormInput } from "./Searchbar.styled";
 
 
-export class Searchbar extends Component {
+export const Searchbar = ({ onSubmit }) => {
 
-    state = {
-        name: '',
+    const [name, setName] = useState('');
+    // state = {
+    //     name: '',
+    // };
+
+
+    // const handleChange = ({target: {value}}) => {
+    //     setName({ name: value });
+    // };
+
+    const handleChange = (event) => {
+        setName(event.currentTarget.value)
     };
 
 
-    handleChange = ({target: {value}}) => {
-        this.setState({ name: value });
-    };
-
-    formSubmit = (event) => {
+    const formSubmit = (event) => {
         event.preventDefault();
 
-        if (this.state.name.trim() === '') {
+        if (name.trim() === '') {
             alert('Please enter name');
             return;
         };
 
-        this.props.onSubmit(this.state.name);
-        this.setState({ name: '' });
+        onSubmit(name);
+        setName('');
     };
 
-    render() {
-       return (
-    <HeaderSearchbar>
-        <SearchForm onSubmit={this.formSubmit} >
-        <SearchFormButton type="submit" >
-           <SearchFormButtonLabel></SearchFormButtonLabel>
-        </SearchFormButton>
+//     const formSubmit = e => {
+//     e.preventDefault();
+//     if (name.trim() === '') {
+//       alert('Там цей, строка пуста!');
+//       return;
+//     }
+//    props.onSubmit({name})
+//    setName('')
+//   }
 
-       <SearchFormInput
-        type="text"
-        // name="name"
-        autocomplete="off"
-        // autofocus
-        placeholder="Search images and photos"
-        value={this.state.name}
-        onChange={this.handleChange}
-        />
-        </SearchForm>
-    </HeaderSearchbar>
+    return (
+        <HeaderSearchbar>
+            <SearchForm onSubmit={formSubmit} >
+                <SearchFormButton type="submit" >
+                    <SearchFormButtonLabel></SearchFormButtonLabel>
+                </SearchFormButton>
+
+                <SearchFormInput
+                    type="text"
+                    // name="name"
+                    autocomplete="off"
+                    // autofocus
+                    placeholder="Search images and photos"
+                    value={name}
+                    onChange={handleChange}
+                />
+            </SearchForm>
+        </HeaderSearchbar>
     )
-    }
-    
-}
+     
+};

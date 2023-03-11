@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { GlobalStyle } from './GlobalStyle';
 import { AppStyled } from './App.styled';
 import { Searchbar } from './Searchbar/Searchbar';
@@ -9,84 +9,118 @@ import { Loader } from './Loader/Loader';
 import fetchImages from 'api/fetch';
 
 
-export class App extends Component {
+export const App = () => {
 
-  state = {
-    name: '',
-    data: [],
-    showModal: false,
-    largeUrl: null,
-    alt: null,
-    loading: false,
-    perPage: 12,
-    page: 1,
-    buttonVisial: false,
-  };
+  const [name, setName] = useState('');
+  const [data, setData] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [largeUrl, setLargeUrl] = useState(null);
+  const [alt, setAlt] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [perPage, setPerPage] = useState(12);
+  const [page, setPage] = useState(1);
+  const [buttonVisial, setButtonVisial] = useState(false);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.perPage !== prevState.perPage) {
-      this.setState({ loading: true });
+  // state = {
+  //   name: '',
+  //   data: [],
+  //   showModal: false,
+  //   largeUrl: null,
+  //   alt: null,
+  //   loading: false,
+  //   perPage: 12,
+  //   page: 1,
+  //   buttonVisial: false,
+  // };
+
+//   componentDidUpdate(prevProps, prevState) {
+//     if (this.state.perPage !== prevState.perPage) {
+//       this.setState({ loading: true });
       
-      fetchImages(this.state.name, this.state.perPage)
-        .then(data => {this.setState({ data: [...this.state.data, ...data.hits] });
+//       fetchImages(this.state.name, this.state.perPage)
+//         .then(data => {this.setState({ data: [...this.state.data, ...data.hits] });
+//       }).catch(error => {console.log('error :>> ', error)})
+//         .finally(() => {
+//           // this.setState({ buttonVisial: true });
+//           this.setState({ loading: false });
+//         });
+//       // this.setState({ loading: false });
+//     }
+    
+//     if (this.state.name !== prevState.name) {
+//       this.setState({ perPage: 12 });
+//       this.setState({ loading: true });
+
+//       fetchImages(this.state.name, this.state.perPage)
+//         .then(dataarray => {this.setState({ data: [...this.state.data, ...dataarray.hits] });
+//         }).catch(error => {console.log('error :>> ', error)})
+//         .finally(() => {
+//           this.setState({ buttonVisial: true });
+//           this.setState({ loading: false });
+//         });
+//     }
+// }
+  useEffect(() => {
+    if (perPage !== 12) {
+      setLoading(true);
+       fetchImages(name, perPage)
+        .then(data => {setData([...data, ...data.hits]);
       }).catch(error => {console.log('error :>> ', error)})
         .finally(() => {
-          // this.setState({ buttonVisial: true });
-          this.setState({ loading: false });
+          setLoading(false);
         });
-      // this.setState({ loading: false });  
-    }
-    
-    if (this.state.name !== prevState.name) {
-      this.setState({ perPage: 12 });
-      this.setState({ loading: true });
-
-      fetchImages(this.state.name, this.state.perPage)
-        .then(dataarray => {this.setState({ data: [...this.state.data, ...dataarray.hits] });
+      
+      if (name !== '') {
+        setPerPage(12);
+        setLoading(true);
+        fetchImages(name, perPage)
+        .then(dataarray => {setData([...data, ...dataarray.hits]);
         }).catch(error => {console.log('error :>> ', error)})
         .finally(() => {
-          this.setState({ buttonVisial: true });
-          this.setState({ loading: false });
+          setButtonVisial(true);
+          setLoading(false);
         });
-    } 
-}
-
-  onFormSubmit = (data) => {
-    this.setState({name: data})
-  }
-
-  toggleModal = () =>
-    this.setState(({ showModal }) => ({
-    showModal: !showModal
-  }))
+    }  
+    
+    }
+      
+      
+  }, [name, perPage, data]);
   
-  modalItems = (dataFind) => {
-    this.setState({
-      largeUrl: dataFind.largeImageURL,
-      alt: dataFind.tags,
-  })
-  }
+  
 
-  loadMoreClick = () => {
-    this.setState(prevState => ({  perPage: prevState.perPage + 1 }));
+  const onFormSubmit = (data) => {
+    setName(data);
+    setPerPage(12);
+  };
+
+  const toggleModal = () => {
+    setShowModal(!showModal)
   };
   
+  const modalItems = (dataFind) => {
+    setLargeUrl(dataFind.largeImageURL);
+    setAlt(dataFind.tags);
+  };
 
-  render() {
+  const loadMoreClick = () => {
+    setPerPage(perPage + 1);
+    setPage(page + 1);
+  };
+  
 
     return (
     <AppStyled>
         <GlobalStyle />
 
-        <Searchbar onSubmit={this.onFormSubmit}/>
-        {this.state.loading && <Loader />}
-        <ImageGallery data={this.state.data} modalItems={this.modalItems} toggleModal={() => { this.toggleModal() }}/>
-        {(this.state.buttonVisial && (this.state.data.length>0)) && <Button click={this.loadMoreClick} />}
-        {this.state.showModal && <Modal onClick={()=> {this.toggleModal()}} src={this.state.largeUrl} alt={this.state.alt} />}
+        <Searchbar onSubmit={onFormSubmit}/>
+        {loading && <Loader />}
+        <ImageGallery data={data} modalItems={modalItems} toggleModal={() => { toggleModal() }}/>
+        {(buttonVisial && (data.length>0)) && <Button click={loadMoreClick} />}
+        {showModal && <Modal onClick={()=> {toggleModal()}} src={largeUrl} alt={alt} />}
       
     </AppStyled>
   );
-  }
   
 };
 

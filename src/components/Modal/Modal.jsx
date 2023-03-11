@@ -1,38 +1,53 @@
 // import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Overlay, ModalDiv } from "./Modal.styled";
 
 const modalRoot = document.querySelector('#modal-root');
 
 
-export class Modal extends Component {
+export const Modal = ({ onClick, src, alt }) => {
     
-    componentDidMount() {
-       // console.log('Modal componentDidMount');
-        window.addEventListener('keydown', this.clickToEsc)
-    };
+    // componentDidMount() {
+    //    // console.log('Modal componentDidMount');
+    //     window.addEventListener('keydown', this.clickToEsc)
+    // };
 
-    componentWillUnmount() {
-        // console.log('Modal componentWillUnmount');
-        window.removeEventListener ('keydown', this.clickToEsc)
-    };
+    // componentWillUnmount() {
+    //     // console.log('Modal componentWillUnmount');
+    //     window.removeEventListener ('keydown', this.clickToEsc)
+    // };
 
-    clickToEsc = (event) =>{
-        if (event.code === 'Escape') {
-            console.dir(this.props.onClick);    
-            this.props.onClick();
+    // useEffect(() => { });
+
+    useEffect(() => {
+        const clickToEsc = (event) => {
+            if (event.code === 'Escape') {
+                onClick();
             }
-    }
+            return;
+        }
+        window.addEventListener('keydown', clickToEsc)
+        
+        return () => { window.removeEventListener('keydown', clickToEsc) }
+    });
+    
 
-    render() {
-      return createPortal(
-        <Overlay onClick={this.props.onClick}>
+
+    // clickToEsc = (event) =>{
+    //     if (event.code === 'Escape') {
+    //         console.dir(onClick);    
+    //         onClick();
+    //         }
+    // }
+
+    
+    return createPortal(
+        <Overlay onClick={onClick}>
             <ModalDiv>
-               <img src={this.props.src} alt={this.props.alt} />
+                <img src={src} alt={alt} />
             </ModalDiv>
         </Overlay>, modalRoot
     )
-    }
-   
-}
+
+};
