@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { HeaderSearchbar, SearchForm, SearchFormButton, SearchFormButtonLabel, SearchFormInput } from "./Searchbar.styled";
 
@@ -6,19 +6,11 @@ import { HeaderSearchbar, SearchForm, SearchFormButton, SearchFormButtonLabel, S
 export const Searchbar = ({ onSubmit }) => {
 
     const [name, setName] = useState('');
-    // state = {
-    //     name: '',
-    // };
-
-
-    // const handleChange = ({target: {value}}) => {
-    //     setName({ name: value });
-    // };
+    
 
     const handleChange = (event) => {
         setName(event.currentTarget.value)
     };
-
 
     const formSubmit = (event) => {
         event.preventDefault();
@@ -31,16 +23,6 @@ export const Searchbar = ({ onSubmit }) => {
         onSubmit(name);
         setName('');
     };
-
-//     const formSubmit = e => {
-//     e.preventDefault();
-//     if (name.trim() === '') {
-//       alert('Там цей, строка пуста!');
-//       return;
-//     }
-//    props.onSubmit({name})
-//    setName('')
-//   }
 
     return (
         <HeaderSearchbar>
@@ -62,4 +44,8 @@ export const Searchbar = ({ onSubmit }) => {
         </HeaderSearchbar>
     )
      
+};
+
+Searchbar.propTypes = {
+    onSubmit: PropTypes.func,
 };

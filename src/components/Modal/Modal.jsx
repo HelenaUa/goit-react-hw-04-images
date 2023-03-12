@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Overlay, ModalDiv } from "./Modal.styled";
@@ -8,18 +8,6 @@ const modalRoot = document.querySelector('#modal-root');
 
 export const Modal = ({ onClick, src, alt }) => {
     
-    // componentDidMount() {
-    //    // console.log('Modal componentDidMount');
-    //     window.addEventListener('keydown', this.clickToEsc)
-    // };
-
-    // componentWillUnmount() {
-    //     // console.log('Modal componentWillUnmount');
-    //     window.removeEventListener ('keydown', this.clickToEsc)
-    // };
-
-    // useEffect(() => { });
-
     useEffect(() => {
         const clickToEsc = (event) => {
             if (event.code === 'Escape') {
@@ -31,17 +19,7 @@ export const Modal = ({ onClick, src, alt }) => {
         
         return () => { window.removeEventListener('keydown', clickToEsc) }
     });
-    
-
-
-    // clickToEsc = (event) =>{
-    //     if (event.code === 'Escape') {
-    //         console.dir(onClick);    
-    //         onClick();
-    //         }
-    // }
-
-    
+      
     return createPortal(
         <Overlay onClick={onClick}>
             <ModalDiv>
@@ -50,4 +28,10 @@ export const Modal = ({ onClick, src, alt }) => {
         </Overlay>, modalRoot
     )
 
+};
+
+Modal.propTypes = {
+    onClick: PropTypes.func,
+    src: PropTypes.string,
+    alt: PropTypes.string,
 };
