@@ -6,7 +6,8 @@ import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
 import { Modal } from './Modal/Modal';
 import { Loader } from './Loader/Loader';
-import fetchImages from 'api/fetch';
+import { fetchImages } from 'api/fetch';
+
 
 
 export const App = () => {
@@ -61,34 +62,69 @@ export const App = () => {
 //     }
 // }
   useEffect(() => {
-    if (perPage !== 12) {
+    if (page !== 1 && perPage === 12) {
       setLoading(true);
        fetchImages(name, perPage)
-        .then(data => {setData([...data, ...data.hits]);
+        .then(data => {setData(data => [...data, ...data.hits]);
       }).catch(error => {console.log('error :>> ', error)})
         .finally(() => {
           setLoading(false);
         });
+      return;
+    }
       
       if (name !== '') {
         setPerPage(12);
         setLoading(true);
         fetchImages(name, perPage)
-        .then(dataarray => {setData([...data, ...dataarray.hits]);
+        .then(dataarray => {setData(data => [...data, ...dataarray.hits]);
         }).catch(error => {console.log('error :>> ', error)})
         .finally(() => {
           setButtonVisial(true);
           setLoading(false);
         });
+        return;
     }  
-    
-    }
-      
-      
-  }, [name, perPage, data]);
+     
+  }, [name, perPage, page, data]);
   
-  
+  // useEffect(() => {
+  //   if (page !== 1) {
+  //     setLoading(true);
+  //     fetchImages(name, page)
+  //     .then(data => {
+  //       setData(responseData);
+  //       setButtonVisial(true);
+  //       })
+  //       .catch(console.log)
+  //       .finally(() => setLoading(false));
+  //   }
+  // }, [name, page]);
 
+//   async function fetchImages() {
+//     setLoading(true);
+//   const KEY = "32997902-3b59b8944b64f8408d8a5fafd";
+//   const BASE_URL = "https://pixabay.com/api/";
+//     try {
+//   const response = await axios.get(`${BASE_URL}?key=${KEY}&q=${name}&image_type=photo&orientation=horizontal&safesearch=true&per_page=12&page=${page}`);
+//   const responseData = await response.data.hits;
+    
+//       setData(responseData);
+// } catch (error) {
+//         console.log(error);
+//     };
+//     setLoading(false);
+//     setButtonVisial(true);
+//   };
+  
+// useEffect(() => {
+//     if (!name) {
+//       return;
+//   };
+//   fetchImages()
+// }, [perPage, name])
+
+  
   const onFormSubmit = (data) => {
     setName(data);
     setPerPage(12);
@@ -104,7 +140,7 @@ export const App = () => {
   };
 
   const loadMoreClick = () => {
-    setPerPage(perPage + 1);
+    setPerPage(perPage + data);
     setPage(page + 1);
   };
   
