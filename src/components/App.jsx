@@ -21,6 +21,7 @@ export const App = () => {
   const [perPage, setPerPage] = useState(12);
   const [page, setPage] = useState(1);
   const [buttonVisial, setButtonVisial] = useState(false);
+  const [error, setError] = useState(null);
 
   
   useEffect(() => {
@@ -35,7 +36,7 @@ export const App = () => {
         .then(newdata => {
           setData(prevData => [...prevData, ...newdata]);
         })
-        .catch(error => console.log('error :>> ', error))
+        .catch(error => setError(error.message))
         .finally(() => {
           setLoading(false);
           setButtonVisial(true)
@@ -49,7 +50,7 @@ export const App = () => {
    useEffect(() => {
     if (!name) {
       return;
-    }
+     }
     setData(prevData=>[]);
   }, [name]);
   
@@ -57,6 +58,7 @@ export const App = () => {
   const onFormSubmit = (data) => {
     setName(data);
     setPerPage(12);
+    setPage(1);
   };
 
   const toggleModal = () => {
@@ -78,6 +80,7 @@ export const App = () => {
     <AppStyled>
         <GlobalStyle />
 
+        {error && <h1>Error</h1>}
         <Searchbar onSubmit={onFormSubmit}/>
         {loading && <Loader />}
         <ImageGallery data={data} modalItems={modalItems} toggleModal={() => { toggleModal() }}/>
